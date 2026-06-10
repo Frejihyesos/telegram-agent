@@ -6,6 +6,7 @@
 - GitHub Actions CI on Windows and Ubuntu.
 - Public security policy and contribution guide.
 - Sanitized fixtures for demo screenshots and reproducible tests.
+- Local browser setup wizard for QR and phone-code login. (done)
 
 ## 0.3.0: Speed Layer
 
@@ -27,4 +28,5 @@
 - Signed release artifacts.
 - MCP client examples beyond Codex.
 - Demo video and sample redacted workflow.
+- Setup wizard screenshots and short onboarding GIF.
 - More granular consent and per-chat policy files.

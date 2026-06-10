@@ -8,7 +8,9 @@
   "scripts": {
     "login": "node scripts/login.js",
     "login:qr": "node scripts/login.js --qr",
-    "check": "node --check scripts/telegram-agent-server.js && node --check scripts/intelligence-store.js && node --check scripts/login.js && node --check scripts/demo.js",
+    "setup": "node scripts/setup-web.js",
+    "setup:no-open": "node scripts/setup-web.js --no-open",
+    "check": "node --check scripts/telegram-agent-server.js && node --check scripts/intelligence-store.js && node --check scripts/auth-store.js && node --check scripts/setup-web.js && node --check scripts/setup-web-ui.js && node --check scripts/login.js && node --check scripts/demo.js",
     "test": "node --test",
     "ci": "npm run check && npm test && npm run self-test",
     "demo:digest": "node scripts/demo.js digest",
@@ -20,6 +22,7 @@
   "dependencies": {
     "better-sqlite3": "^12.10.0",
     "input": "^1.0.1",
+    "qrcode": "^1.5.4",
     "qrcode-terminal": "^0.12.0",
     "telegram": "^2.26.22"
   }

@@ -2,14 +2,16 @@
 
 ## Project Identity
 
-Telegram Agent is a local Codex plugin and MCP server for Telegram inbox triage, dialog lookup, selected-chat context, message search, SQLite-backed digests/search/watchlists, maintainer intelligence, local reply drafts, scoped reply sessions, and explicitly authorized sends. It is a CommonJS Node.js project.
+Telegram Agent is a local Codex plugin and MCP server for Telegram setup, inbox triage, dialog lookup, selected-chat context, message search, SQLite-backed digests/search/watchlists, maintainer intelligence, local reply drafts, scoped reply sessions, and explicitly authorized sends. It is a CommonJS Node.js project.
 
 ## Runtime Map
 
 - MCP entry point: `scripts/telegram-agent-server.js`.
 - Intelligence/cache module: `scripts/intelligence-store.js`.
+- Auth metadata module: `scripts/auth-store.js`.
+- Browser setup wizard: `scripts/setup-web.js` and `scripts/setup-web-ui.js`.
 - Demo entry point: `scripts/demo.js`.
-- Login entry point: `scripts/login.js`.
+- Terminal login fallback: `scripts/login.js`.
 - Codex plugin manifest: `.codex-plugin/plugin.json`.
 - MCP server config: `.mcp.json` and `.codex/config.toml`.
 - Skill instructions loaded by Codex: `skills/telegram-agent/SKILL.md`.
@@ -50,6 +52,15 @@ The MCP server runs over stdio, implements `initialize`, `tools/list`, and `tool
 
 `scripts/login.js` owns QR and phone-code login and writes the local GramJS session.
 
+`scripts/setup-web.js` owns the local browser setup wizard:
+
+- binds only to `127.0.0.1`;
+- requires `X-Telegram-Agent-Setup-Token` on all `/api/*` routes;
+- supports QR login, phone-code login, and 2FA password prompts;
+- never stores login codes or 2FA passwords.
+
+`scripts/auth-store.js` owns config/session paths and SQLite auth metadata. It stores status, account summaries, fingerprints, and auth events, but not API hashes or full session strings in SQLite.
+
 ## Data And Storage
 
 Default local state lives in `%USERPROFILE%\.codex\telegram-agent`:
@@ -57,7 +68,7 @@ Default local state lives in `%USERPROFILE%\.codex\telegram-agent`:
 - `config.json`: Telegram API id/hash.
 - `session.txt`: GramJS string session.
 - `drafts/*.json`: local reply drafts.
-- `telegram-agent.sqlite`: cached sources/messages/links, digest profiles, watchlists, action items, reply sessions, contact memory, and mirrored audit events.
+- `telegram-agent.sqlite`: cached sources/messages/links, digest profiles, watchlists, action items, reply sessions, contact memory, auth metadata, and mirrored audit events.
 
 Never copy these values into source, issues, tests, logs, or docs. The repository must not include real Telegram messages or credentials.
 
@@ -66,6 +77,7 @@ Never copy these values into source, issues, tests, logs, or docs. The repositor
 Verified commands:
 
 - `npm install`
+- `npm run setup`
 - `npm run login:qr`
 - `npm run status`
 - `npm run check`
@@ -80,10 +92,12 @@ Verified commands:
 
 - Start with `scripts/telegram-agent-server.js` for tool behavior changes.
 - Start with `scripts/intelligence-store.js` for cache, digest, watchlist, research, and maintainer intelligence behavior.
+- Start with `scripts/setup-web.js` / `scripts/auth-store.js` for setup or auth onboarding changes.
 - Update `skills/telegram-agent/SKILL.md` whenever agent workflow or send rules change.
 - Update README/tool docs when adding or removing MCP tools.
 - Keep sending conservative: draft-first by default, direct-send only for explicitly authorized resolved chats.
 - Do not reintroduce Telegram Desktop `tdata` handling into the public project.
+- Do not log, store, or expose Telegram login codes, 2FA passwords, API hashes, setup tokens, or full session strings.
 
 ## Risks And Caveats
 

@@ -1,6 +1,6 @@
 ---
 name: telegram-agent
-description: Use when the user asks Codex to inspect, summarize, search, triage, draft, or send Telegram messages through the local Telegram Agent plugin.
+description: Use when the user asks Codex to set up, inspect, summarize, search, triage, draft, or send Telegram messages through the local Telegram Agent plugin.
 ---
 
 # Telegram Agent
@@ -9,19 +9,20 @@ Use the `telegram-agent` MCP tools for Telegram account assistance. Prefer the s
 
 ## Quick Routing
 
-- Setup/status: call `telegram_setup_status` first when connection state is unknown.
+- Setup/status: call `telegram_auth_status` first for local auth state, or `telegram_setup_status` when dependency/send state is also needed.
+- "Set up Telegram / login / authorize account": call `telegram_start_setup` and give the user the returned local URL.
 - "Show unread/recent chats": call `telegram_inbox_brief` with a small limit. Use `unread_only: true` by default.
-- "Составь дайджест по ИИ каналам / Codex / MCP": call `telegram_cache_status`; if cache is empty, call `telegram_sync_sources`, then `telegram_sync_recent_messages` with relevant categories; then call `telegram_run_topic_digest`.
-- "Что я пропустил / weekly report": call `telegram_weekly_maintainer_report`.
-- "Где мне нужно ответить": call `telegram_needs_reply`.
-- "Какие задачи из Telegram": call `telegram_extract_actions` and `telegram_followup_tracker`.
-- "Следи за topic": use `telegram_create_watchlist`, then `telegram_run_watchlist`.
+- "Create a digest for AI channels / Codex / MCP": call `telegram_cache_status`; if cache is empty, call `telegram_sync_sources`, then `telegram_sync_recent_messages` with relevant categories; then call `telegram_run_topic_digest`.
+- "What did I miss / weekly report": call `telegram_weekly_maintainer_report`.
+- "Where do I need to reply": call `telegram_needs_reply`.
+- "What tasks came from Telegram": call `telegram_extract_actions` and `telegram_followup_tracker`.
+- "Watch topic": use `telegram_create_watchlist`, then `telegram_run_watchlist`.
 - "Find Ivan / what is in Ivan chat": call `telegram_find_dialogs`, choose the single unambiguous returned `ref`, then call `telegram_chat_context`.
 - "Summarize this chat": fetch `telegram_chat_context` with `limit: 40` and `order: "chronological"` unless the user asks for another window.
 - "Find a phrase in a chat": call `telegram_search_chat_messages` for that named chat.
 - "Draft a reply": call `telegram_create_draft` after composing the exact text.
 - "Send this one reply": use draft flow: `telegram_create_draft`, show recipient and exact text, then call `telegram_send_draft` only after explicit confirmation.
-- "You may write to Ivan yourself / continue talking to Ivan": if the user grants ongoing send authorization for one named chat in the current task, resolve that chat once and use `telegram_send_message` for later messages to the same resolved chat.
+- "You may write to Ivan yourself / continue talking to Ivan": if the user grants ongoing send authorization for one named chat in the current task, resolve that chat once, start `telegram_start_reply_session`, and use `telegram_send_message` only for the same resolved chat/topic.
 
 ## Security Boundaries
 
@@ -34,6 +35,7 @@ Use the `telegram-agent` MCP tools for Telegram account assistance. Prefer the s
 - Ongoing send authorization is limited to the named chat/contact and current task. It ends if the user revokes it, changes recipient, asks for a materially different goal, or a new conversation/task starts.
 - Even with ongoing authorization, do not send bulk outreach, spam, harassment, threats, impersonation, deception, account evasion, or messages outside the user's stated intent.
 - If sending is disabled, explain that `TELEGRAM_AGENT_ALLOW_SEND=1` must be set before Codex starts.
+- For setup, use `telegram_start_setup` or `npm run setup`; never ask the user to paste API hashes, sessions, login codes, or passwords into Codex chat.
 
 ## Send Rules
 
@@ -47,6 +49,8 @@ Use the `telegram-agent` MCP tools for Telegram account assistance. Prefer the s
 
 ## Tool Selection
 
+- `telegram_auth_status`: inspect local setup/account state without a live Telegram connection.
+- `telegram_start_setup`: start the local 127.0.0.1 browser wizard for API credentials and QR/phone login.
 - `telegram_setup_status`: verify credentials, session, dependencies, and send mode.
 - `telegram_me`: verify which Telegram account is authorized.
 - `telegram_inbox_brief`: start broad unread/recent triage.
@@ -77,6 +81,7 @@ Use the `telegram-agent` MCP tools for Telegram account assistance. Prefer the s
 
 ## Setup Commands
 
-- `npm run login:qr`: QR code login from Telegram mobile.
-- `npm run login`: phone code login, may have rate limits.
+- `npm run setup`: local browser setup wizard with QR login and phone-code fallback.
+- `npm run login:qr`: terminal QR login fallback.
+- `npm run login`: terminal phone-code login fallback; may hit Telegram rate limits after repeated attempts.
 - `npm run status`: check setup status.

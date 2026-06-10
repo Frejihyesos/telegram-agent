@@ -2,16 +2,15 @@
 "use strict";
 
 const fs = require("fs");
-const os = require("os");
-const path = require("path");
 const input = require("input");
 const qrcode = require("qrcode-terminal");
 const { TelegramClient } = require("telegram");
 const { StringSession } = require("telegram/sessions");
+const authStore = require("./auth-store");
 
-const DATA_DIR = process.env.TELEGRAM_AGENT_DATA_DIR || path.join(os.homedir(), ".codex", "telegram-agent");
-const CONFIG_FILE = process.env.TELEGRAM_CONFIG_FILE || path.join(DATA_DIR, "config.json");
-const SESSION_FILE = process.env.TELEGRAM_SESSION_FILE || path.join(DATA_DIR, "session.txt");
+const DATA_DIR = authStore.DATA_DIR;
+const CONFIG_FILE = authStore.CONFIG_FILE;
+const SESSION_FILE = authStore.SESSION_FILE;
 
 function readJson(filePath) {
   try {
@@ -19,11 +18,6 @@ function readJson(filePath) {
   } catch {
     return {};
   }
-}
-
-function writeJson(filePath, data) {
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.writeFileSync(filePath, `${JSON.stringify(data, null, 2)}\n`, "utf8");
 }
 
 function readSession() {
@@ -59,7 +53,7 @@ function sanitizePhone(phoneNumber) {
 
 async function saveLoggedInSession(client, user) {
   const session = client.session.save();
-  fs.writeFileSync(SESSION_FILE, `${session}\n`, "utf8");
+  authStore.writeSession(session, user);
   await client.disconnect();
 
   console.log("");
@@ -135,7 +129,7 @@ async function main() {
     throw new Error("api_hash is required.");
   }
 
-  writeJson(CONFIG_FILE, { api_id: apiId, api_hash: apiHash });
+  authStore.writeConfig({ api_id: apiId, api_hash: apiHash });
 
   const client = new TelegramClient(new StringSession(readSession()), apiId, apiHash, {
     connectionRetries: 5

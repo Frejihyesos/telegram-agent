@@ -5,7 +5,9 @@ const crypto = require("crypto");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
+const authStore = require("./auth-store");
 const intelligence = require("./intelligence-store");
+const setupWeb = require("./setup-web");
 
 const DATA_DIR = process.env.TELEGRAM_AGENT_DATA_DIR || path.join(os.homedir(), ".codex", "telegram-agent");
 const CONFIG_FILE = process.env.TELEGRAM_CONFIG_FILE || path.join(DATA_DIR, "config.json");
@@ -35,6 +37,35 @@ const TOOLS = [
           type: "boolean",
           default: false,
           description: "When true, connect to Telegram and verify the session."
+        }
+      }
+    }
+  },
+  {
+    name: "telegram_auth_status",
+    description: "Return local Telegram auth setup status, configured paths, and saved account metadata without exposing secrets.",
+    inputSchema: {
+      type: "object",
+      properties: {}
+    }
+  },
+  {
+    name: "telegram_start_setup",
+    description: "Start the local 127.0.0.1 browser setup wizard for Telegram API credentials and QR or phone login.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        open_browser: {
+          type: "boolean",
+          default: true,
+          description: "When true, ask the OS to open the local setup page in the default browser."
+        },
+        port: {
+          type: "integer",
+          minimum: 0,
+          maximum: 65535,
+          default: 0,
+          description: "Local port. Use 0 to choose a free port."
         }
       }
     }
@@ -631,7 +662,8 @@ async function telegramSetupStatus(args = {}) {
     session_format: basicSessionFormat(rawSession),
     send_enabled: process.env.TELEGRAM_AGENT_ALLOW_SEND === "1",
     tdata_supported: false,
-    setup_advice: "Run `npm install` and then `npm run login:qr` or `npm run login` in C:\\Users\\User\\plugins\\telegram-agent."
+    setup_wizard: authStore.authStatus(),
+    setup_advice: "Run `npm run setup` for the local browser wizard, or use `npm run login:qr` / `npm run login` in C:\\Users\\User\\plugins\\telegram-agent."
   };
 
   if (args.check_connection) {
@@ -652,6 +684,26 @@ async function telegramSetupStatus(args = {}) {
   }
 
   return result;
+}
+
+async function telegramAuthStatus() {
+  return authStore.authStatus();
+}
+
+async function telegramStartSetup(args = {}) {
+  const port = Number.isInteger(Number(args.port)) ? Math.max(0, Math.min(65535, Number(args.port))) : 0;
+  const instance = await setupWeb.startSetupServer({
+    port,
+    open_browser: args.open_browser !== false
+  });
+  return {
+    url: instance.url,
+    host: instance.host,
+    port: instance.port,
+    local_only: true,
+    status: setupWeb.publicStatus(instance.runtime),
+    warning: "The setup page is bound to 127.0.0.1 and protected by a per-process setup token."
+  };
 }
 
 async function telegramMe() {
@@ -1025,6 +1077,10 @@ async function callTool(name, args) {
   switch (name) {
     case "telegram_setup_status":
       return telegramSetupStatus(args || {});
+    case "telegram_auth_status":
+      return telegramAuthStatus(args || {});
+    case "telegram_start_setup":
+      return telegramStartSetup(args || {});
     case "telegram_me":
       return telegramMe(args || {});
     case "telegram_list_dialogs":
@@ -1216,6 +1272,7 @@ async function selfTest() {
     session_configured: Boolean(process.env.TELEGRAM_STRING_SESSION || readText(SESSION_FILE)),
     session_format: basicSessionFormat(String(process.env.TELEGRAM_STRING_SESSION || readText(SESSION_FILE)).trim()),
     send_enabled: process.env.TELEGRAM_AGENT_ALLOW_SEND === "1",
+    setup_wizard_available: true,
     tdata_supported: false
   };
 }
@@ -1251,6 +1308,8 @@ module.exports = {
   entitySummary,
   messageSummary,
   buildChatStats,
+  telegramAuthStatus,
+  telegramStartSetup,
   telegramSetupStatus,
   basicSessionFormat,
   validateAuthorizationBasis,

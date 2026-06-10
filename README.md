@@ -32,15 +32,18 @@ Telegram Agent solves that by keeping the Telegram API session on the user's mac
 ```powershell
 cd path\to\telegram-agent
 npm install
-npm run login:qr
+npm run setup
 npm run status
 ```
 
-QR login is preferred. In Telegram mobile, open **Settings > Devices > Link Desktop Device** and scan the terminal QR code.
+`npm run setup` starts a local browser wizard on `127.0.0.1`. It lets you save the Telegram API id/hash, choose QR login or phone-code login, and see the local state paths after authorization.
 
-Phone code login is also available:
+QR login is preferred. In Telegram mobile, open **Settings > Devices > Link Desktop Device** and scan the browser QR code.
+
+Terminal fallback commands are also available:
 
 ```powershell
+npm run login:qr
 npm run login
 ```
 
@@ -65,13 +68,17 @@ The local plugin config in this repo already sets that value for the `telegram-a
 - `%USERPROFILE%\.codex\telegram-agent\config.json`: Telegram API id/hash.
 - `%USERPROFILE%\.codex\telegram-agent\session.txt`: GramJS string session.
 - `%USERPROFILE%\.codex\telegram-agent\drafts\`: unsent local reply drafts.
-- `%USERPROFILE%\.codex\telegram-agent\telegram-agent.sqlite`: local source/message cache, digest profiles, watchlists, action items, contact memory, and reply sessions.
+- `%USERPROFILE%\.codex\telegram-agent\telegram-agent.sqlite`: local source/message cache, digest profiles, watchlists, action items, contact memory, reply sessions, and auth metadata.
+
+The setup wizard never stores a Telegram 2FA password. SQLite stores auth status, account summary, fingerprints, and events, but not the API hash or full GramJS session.
 
 Delete that directory to remove local Telegram Agent state. To fully revoke the Telegram API session, also remove the session from Telegram settings.
 
 ## MCP Tools
 
 - `telegram_setup_status`: check credentials, session, dependencies, and send mode.
+- `telegram_auth_status`: inspect local auth setup status without connecting to Telegram.
+- `telegram_start_setup`: start the local browser setup wizard and return its URL.
 - `telegram_me`: show the authorized Telegram account summary.
 - `telegram_list_dialogs`: list recent dialogs with optional unread filtering.
 - `telegram_find_dialogs`: search dialogs by title, username, id, or ref.
@@ -130,6 +137,7 @@ The repository includes a pinned GitHub Actions template at [docs/ci-github-acti
 This project is early but usable locally. Implemented high-impact features include:
 
 - SQLite cache with FTS5 for fast local search;
+- local browser setup wizard with QR and phone-code login;
 - topic digests with source suggestions and dedupe clusters;
 - maintainer-focused needs-reply, action extraction, follow-up tracking, and weekly reports;
 - watchlists, research mode, trend detection, scoped reply sessions, and contact memory;

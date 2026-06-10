@@ -6,7 +6,7 @@ Thanks for improving Telegram Agent.
 
 ```powershell
 npm install
-npm run login:qr
+npm run setup
 npm run status
 ```
 
@@ -34,4 +34,3 @@ npm run ci
 - One clear tool should map to one user intent.
 - Ambiguous chat resolution must ask the user before sending.
 - Bulk outreach, spam, harassment, evasion, or deceptive automation are out of scope.
-
