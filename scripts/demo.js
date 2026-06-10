@@ -42,6 +42,45 @@ function print(value) {
   process.stdout.write(`${JSON.stringify(value, null, 2)}\n`);
 }
 
+function markdownList(items, formatter) {
+  if (!items.length) return "- None\n";
+  return `${items.map((item) => `- ${formatter(item)}`).join("\n")}\n`;
+}
+
+function printOssReport(loaded) {
+  const digest = intelligence.telegramRunTopicDigest({ topic: "AI Codex MCP", period: "last_24h", source_categories: ["ai"], limit: 100 });
+  const needsReply = intelligence.telegramNeedsReply({ period: "last_24h", limit: 20 });
+  const issueDrafts = intelligence.telegramCreateGithubIssueDrafts({ period: "last_7d", repo: "Frejihyesos/telegram-agent", limit: 5 });
+  const safety = intelligence.telegramDetectPromptInjection({ period: "last_7d", min_severity: "medium", limit: 10 });
+  const context = intelligence.telegramBuildMaintainerContext({ period: "last_7d", topic: "Codex MCP", limit: 100 });
+  const lines = [
+    "# Telegram Agent OSS Evidence Report",
+    "",
+    "## Demo Dataset",
+    `- Synthetic sources: ${loaded.source_count}`,
+    `- Synthetic messages: ${loaded.message_count}`,
+    "- Real Telegram data: none",
+    "",
+    "## Maintainer Intelligence Signals",
+    `- Digest clusters: ${digest.clusters.length}`,
+    `- Pending reply threads: ${needsReply.count}`,
+    `- GitHub issue drafts: ${issueDrafts.count}`,
+    `- Prompt-injection findings: ${safety.count}`,
+    `- Context pack id: ${context.context_id}`,
+    "",
+    "## Example Issue Drafts",
+    markdownList(issueDrafts.drafts, (draft) => `${draft.title} [${draft.labels.join(", ")}] evidence=${draft.evidence.map((message) => message.message_ref).join(", ")}`),
+    "## Safety Findings",
+    markdownList(safety.findings, (finding) => `${finding.severity}: ${finding.message_ref} (${finding.rules.map((rule) => rule.id).join(", ")})`),
+    "## Why This Matters",
+    "- Converts Telegram support noise into maintainer-ready GitHub issue drafts.",
+    "- Builds compact Codex context packs with message refs instead of raw chat dumps.",
+    "- Detects untrusted Telegram messages that try to control the agent or steal secrets.",
+    "- Runs locally with no hosted backend and no real Telegram data in the demo."
+  ];
+  process.stdout.write(`${lines.join("\n")}\n`);
+}
+
 function main() {
   const loaded = loadDemo();
   if (command === "digest") {
@@ -63,6 +102,31 @@ function main() {
       loaded,
       result: intelligence.telegramWeeklyMaintainerReport({ period: "last_7d", limit: 100 })
     });
+    return;
+  }
+  if (command === "prompt-injection") {
+    print({
+      loaded,
+      result: intelligence.telegramDetectPromptInjection({ period: "last_7d", min_severity: "medium", limit: 20 })
+    });
+    return;
+  }
+  if (command === "issue-drafts") {
+    print({
+      loaded,
+      result: intelligence.telegramCreateGithubIssueDrafts({ period: "last_7d", repo: "Frejihyesos/telegram-agent", limit: 10 })
+    });
+    return;
+  }
+  if (command === "context") {
+    print({
+      loaded,
+      result: intelligence.telegramBuildMaintainerContext({ period: "last_7d", topic: "Codex MCP", limit: 100 })
+    });
+    return;
+  }
+  if (command === "oss-report") {
+    printOssReport(loaded);
     return;
   }
   throw new Error(`Unknown demo command: ${command}`);

@@ -25,6 +25,7 @@ For now, open a private GitHub security advisory if available on the repository,
 - Login codes and Telegram 2FA passwords are never stored.
 - Sending is disabled unless `TELEGRAM_AGENT_ALLOW_SEND=1`.
 - Direct send tools require explicit user authorization for the resolved chat.
+- Telegram message text is treated as untrusted content and can be scanned for prompt-injection attempts.
 - The public project does not read Telegram Desktop `tdata`.
 
 ## Maintainer Checklist
@@ -34,4 +35,5 @@ For now, open a private GitHub security advisory if available on the repository,
 - Never log setup tokens, API hashes, login codes, 2FA passwords, or full session strings.
 - Prefer fixtures with fake entity ids and message text.
 - Add tests for send gates and authorization checks before changing send behavior.
+- Add tests for prompt-injection handling before changing how Telegram text influences actions.
 - Run `npm run ci` and the security pattern scan before release.

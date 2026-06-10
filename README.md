@@ -95,6 +95,7 @@ Delete that directory to remove local Telegram Agent state. To fully revoke the 
 - Cache and search: `telegram_sync_sources`, `telegram_sync_recent_messages`, `telegram_cache_status`, `telegram_search_cached_messages`.
 - Digests: `telegram_suggest_sources`, `telegram_rank_sources`, `telegram_create_digest_profile`, `telegram_list_digest_profiles`, `telegram_run_digest`, `telegram_run_topic_digest`, `telegram_explain_digest_cluster`.
 - Maintainer intelligence: `telegram_needs_reply`, `telegram_extract_actions`, `telegram_followup_tracker`, `telegram_weekly_maintainer_report`.
+- OSS maintainer bridge: `telegram_detect_prompt_injection`, `telegram_create_github_issue_drafts`, `telegram_build_maintainer_context`.
 - Watchlists and research: `telegram_create_watchlist`, `telegram_list_watchlists`, `telegram_run_watchlist`, `telegram_research_topic`, `telegram_detect_trends`.
 - Safe autonomy: `telegram_start_reply_session`, `telegram_reply_session_status`, `telegram_stop_reply_session`, `telegram_contact_context`.
 
@@ -124,6 +125,10 @@ npm run ci
 npm run demo:digest
 npm run demo:needs-reply
 npm run demo:weekly-report
+npm run demo:prompt-injection
+npm run demo:issue-drafts
+npm run demo:context
+npm run demo:oss-report
 ```
 
 The test suite uses Node's built-in `node:test` runner and avoids live Telegram writes.
@@ -140,6 +145,9 @@ This project is early but usable locally. Implemented high-impact features inclu
 - local browser setup wizard with QR and phone-code login;
 - topic digests with source suggestions and dedupe clusters;
 - maintainer-focused needs-reply, action extraction, follow-up tracking, and weekly reports;
+- prompt-injection detection over untrusted Telegram text;
+- GitHub issue draft generation from Telegram bug reports and feature requests;
+- compact maintainer context packs for Codex;
 - watchlists, research mode, trend detection, scoped reply sessions, and contact memory;
 - sanitized demo fixtures;
 

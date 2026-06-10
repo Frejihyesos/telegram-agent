@@ -16,6 +16,10 @@
     "demo:digest": "node scripts/demo.js digest",
     "demo:needs-reply": "node scripts/demo.js needs-reply",
     "demo:weekly-report": "node scripts/demo.js weekly-report",
+    "demo:prompt-injection": "node scripts/demo.js prompt-injection",
+    "demo:issue-drafts": "node scripts/demo.js issue-drafts",
+    "demo:context": "node scripts/demo.js context",
+    "demo:oss-report": "node scripts/demo.js oss-report",
     "self-test": "node scripts/telegram-agent-server.js --self-test",
     "status": "node scripts/telegram-agent-server.js --call telegram_setup_status {}"
   },

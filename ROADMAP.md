@@ -20,6 +20,9 @@
 - `telegram_needs_reply`: rank chats with unanswered incoming questions. (done)
 - `telegram_weekly_maintainer_report`: summarize urgent contributor/tester/project chats. (done)
 - Link extraction for GitHub issues, pull requests, releases, incidents, and deadlines. (done)
+- Prompt-injection detection for untrusted Telegram message text. (done)
+- GitHub issue draft generation from Telegram reports and requests. (done)
+- Codex-ready maintainer context packs. (done)
 - Per-chat reply session policies built on the existing local audit log. (done)
 - Next: benchmark and tune source scoring/dedupe quality on real-world opt-in fixtures.
 
