@@ -5,6 +5,7 @@ const crypto = require("crypto");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
+const intelligence = require("./intelligence-store");
 
 const DATA_DIR = process.env.TELEGRAM_AGENT_DATA_DIR || path.join(os.homedir(), ".codex", "telegram-agent");
 const CONFIG_FILE = process.env.TELEGRAM_CONFIG_FILE || path.join(DATA_DIR, "config.json");
@@ -207,6 +208,7 @@ const TOOLS = [
     }
   }
 ];
+TOOLS.push(...intelligence.INTELLIGENCE_TOOLS);
 
 let telegramLib = null;
 let cachedClient = null;
@@ -260,6 +262,7 @@ function appendAuditEvent(action, details = {}) {
   };
   fs.mkdirSync(path.dirname(AUDIT_FILE), { recursive: true });
   fs.appendFileSync(AUDIT_FILE, `${JSON.stringify(event)}\n`, "utf8");
+  intelligence.recordAuditEvent(action, event);
   return event;
 }
 
@@ -990,23 +993,35 @@ async function telegramSendMessage(args = {}) {
   const authorizationBasis = validateAuthorizationBasis(args.authorization_basis);
   const client = await getClient();
   const entity = await resolveEntity(client, args.chat);
+  const chat = entitySummary(entity);
+  const replySession = intelligence.assertReplySessionForSend(chat, text, authorizationBasis);
   const sent = await client.sendMessage(entity, { message: text });
+  const updatedSession = intelligence.recordReplySessionSend(replySession.session_id);
   appendAuditEvent("message_sent", {
-    chat: auditChat(entitySummary(entity)),
+    chat: auditChat(chat),
     message_id: sent && sent.id ? Number(sent.id) : null,
+    reply_session_id: replySession.session_id,
     authorization_basis: authorizationBasis,
     ...textFingerprint(text)
   });
   return {
     sent: true,
-    chat: entitySummary(entity),
+    chat,
     message_id: sent && sent.id ? Number(sent.id) : null,
     text,
-    authorization_basis: authorizationBasis
+    authorization_basis: authorizationBasis,
+    reply_session: updatedSession
   };
 }
 
 async function callTool(name, args) {
+  const intelligenceContext = {
+    getClient,
+    resolveEntity,
+    entitySummary,
+    dialogSummary,
+    messageSummary
+  };
   switch (name) {
     case "telegram_setup_status":
       return telegramSetupStatus(args || {});
@@ -1037,6 +1052,19 @@ async function callTool(name, args) {
     case "telegram_send_message":
       return telegramSendMessage(args || {});
     default:
+      if (name === "telegram_start_reply_session") {
+        const client = await getClient();
+        const entity = await resolveEntity(client, args && args.chat);
+        return intelligence.createReplySession(args || {}, entitySummary(entity));
+      }
+      if (name === "telegram_contact_context") {
+        const client = await getClient();
+        const entity = await resolveEntity(client, args && args.chat);
+        return intelligence.contactMemory(args || {}, entitySummary(entity));
+      }
+      if (intelligence.hasTool(name)) {
+        return intelligence.handleTool(name, args || {}, intelligenceContext);
+      }
       throw new TelegramAgentError(`Unknown tool: ${name}`, { kind: "input" });
   }
 }

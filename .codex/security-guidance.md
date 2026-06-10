@@ -6,6 +6,7 @@
 - GramJS string sessions.
 - Message text, sender ids, chat titles, usernames, draft text.
 - Local draft files.
+- Local SQLite cache files, including sources, messages, links, action items, reply sessions, and contact memory.
 
 ## Trust Boundaries
 
@@ -22,4 +23,5 @@
 - Do not send to ambiguous chat matches.
 - Direct sends require both environment enablement and current user authorization for the resolved chat.
 - Tests must use synthetic message fixtures.
-
+- Demo fixtures must remain synthetic and must never be generated from real Telegram exports.
+- Do not commit `telegram-agent.sqlite`, WAL/SHM files, or any local cache copied from `%USERPROFILE%\.codex\telegram-agent`.

@@ -1,0 +1,66 @@
+[
+  {
+    "source_ref": "@openai_watch",
+    "message_id": 101,
+    "age_hours": 4,
+    "outgoing": false,
+    "sender_id": "1001",
+    "text": "OpenAI expanded Codex tooling for maintainers. Details: https://openai.com/codex"
+  },
+  {
+    "source_ref": "@ai_builders",
+    "message_id": 201,
+    "age_hours": 3,
+    "outgoing": false,
+    "sender_id": "1002",
+    "text": "Codex tooling for OSS maintainers is getting more attention today. Same source: https://openai.com/codex"
+  },
+  {
+    "source_ref": "@ai_builders",
+    "message_id": 202,
+    "age_hours": 7,
+    "outgoing": false,
+    "sender_id": "1002",
+    "text": "New MCP agent examples show local-first workflows for Telegram and GitHub."
+  },
+  {
+    "source_ref": "Chat:maintainers",
+    "message_id": 301,
+    "age_hours": 6,
+    "outgoing": false,
+    "sender_id": "alice",
+    "text": "Bug report: npm install fails on Windows for one tester. Can you check the setup docs?"
+  },
+  {
+    "source_ref": "Chat:maintainers",
+    "message_id": 302,
+    "age_hours": 5,
+    "outgoing": true,
+    "sender_id": "me",
+    "text": "I will check it today."
+  },
+  {
+    "source_ref": "Chat:maintainers",
+    "message_id": 303,
+    "age_hours": 2,
+    "outgoing": false,
+    "sender_id": "bob",
+    "text": "Please also create a GitHub issue for the QR login docs: https://github.com/Frejihyesos/telegram-agent/issues/1"
+  },
+  {
+    "source_ref": "User:ivan",
+    "message_id": 401,
+    "age_hours": 8,
+    "outgoing": true,
+    "sender_id": "me",
+    "text": "I will send the install command later."
+  },
+  {
+    "source_ref": "User:ivan",
+    "message_id": 402,
+    "age_hours": 1,
+    "outgoing": false,
+    "sender_id": "ivan",
+    "text": "Can you send the command now? The plugin does not start for me."
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "ref": "@openai_watch",
+    "id": "1001",
+    "title": "OpenAI Watch",
+    "username": "openai_watch",
+    "type": "Channel",
+    "categories": ["ai", "dev", "news"],
+    "sample_text": "OpenAI Codex API models MCP developer tools"
+  },
+  {
+    "ref": "@ai_builders",
+    "id": "1002",
+    "title": "AI Builders",
+    "username": "ai_builders",
+    "type": "Channel",
+    "categories": ["ai", "dev"],
+    "sample_text": "LLM agents evals prompts coding tools"
+  },
+  {
+    "ref": "Chat:maintainers",
+    "id": "2001",
+    "title": "Maintainers Team",
+    "username": null,
+    "type": "Chat",
+    "categories": ["work", "support", "dev"],
+    "sample_text": "release bug report issue pull request"
+  },
+  {
+    "ref": "User:ivan",
+    "id": "3001",
+    "title": "Ivan",
+    "username": "ivan",
+    "type": "User",
+    "categories": ["work", "personal"],
+    "sample_text": "plugin install support follow up"
+  }
+]

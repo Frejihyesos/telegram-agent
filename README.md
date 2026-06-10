@@ -65,6 +65,7 @@ The local plugin config in this repo already sets that value for the `telegram-a
 - `%USERPROFILE%\.codex\telegram-agent\config.json`: Telegram API id/hash.
 - `%USERPROFILE%\.codex\telegram-agent\session.txt`: GramJS string session.
 - `%USERPROFILE%\.codex\telegram-agent\drafts\`: unsent local reply drafts.
+- `%USERPROFILE%\.codex\telegram-agent\telegram-agent.sqlite`: local source/message cache, digest profiles, watchlists, action items, contact memory, and reply sessions.
 
 Delete that directory to remove local Telegram Agent state. To fully revoke the Telegram API session, also remove the session from Telegram settings.
 
@@ -84,6 +85,11 @@ Delete that directory to remove local Telegram Agent state. To fully revoke the 
 - `telegram_delete_draft`: delete one pending draft.
 - `telegram_send_draft`: send a reviewed saved draft.
 - `telegram_send_message`: send one direct message when sending is enabled and the user explicitly authorized that resolved chat.
+- Cache and search: `telegram_sync_sources`, `telegram_sync_recent_messages`, `telegram_cache_status`, `telegram_search_cached_messages`.
+- Digests: `telegram_suggest_sources`, `telegram_rank_sources`, `telegram_create_digest_profile`, `telegram_list_digest_profiles`, `telegram_run_digest`, `telegram_run_topic_digest`, `telegram_explain_digest_cluster`.
+- Maintainer intelligence: `telegram_needs_reply`, `telegram_extract_actions`, `telegram_followup_tracker`, `telegram_weekly_maintainer_report`.
+- Watchlists and research: `telegram_create_watchlist`, `telegram_list_watchlists`, `telegram_run_watchlist`, `telegram_research_topic`, `telegram_detect_trends`.
+- Safe autonomy: `telegram_start_reply_session`, `telegram_reply_session_status`, `telegram_stop_reply_session`, `telegram_contact_context`.
 
 ## Maintainer Workflow
 
@@ -93,6 +99,14 @@ Delete that directory to remove local Telegram Agent state. To fully revoke the 
 4. Use `telegram_create_draft` for normal proposed replies.
 5. Use `telegram_send_message` only in an explicitly authorized ongoing chat task.
 
+## Digest Workflow
+
+1. Run `telegram_sync_sources`.
+2. Run `telegram_sync_recent_messages` for selected sources or categories.
+3. Use `telegram_suggest_sources` for a phrase such as `AI`, `Codex`, `MCP`, `work`, or `support`.
+4. Use `telegram_run_topic_digest` for one-off digests or `telegram_create_digest_profile` plus `telegram_run_digest` for recurring digests.
+5. Ask Codex to turn the structured clusters into final prose with source refs and message refs.
+
 ## Development
 
 ```powershell
@@ -100,19 +114,30 @@ npm run check
 npm test
 npm run self-test
 npm run ci
+npm run demo:digest
+npm run demo:needs-reply
+npm run demo:weekly-report
 ```
 
 The test suite uses Node's built-in `node:test` runner and avoids live Telegram writes.
+
+The demo commands use synthetic fixtures only; they do not require Telegram credentials.
 
 The repository includes a pinned GitHub Actions template at [docs/ci-github-actions.yml](./docs/ci-github-actions.yml). Copy it to `.github/workflows/ci.yml` when publishing with a GitHub token that has the `workflow` scope.
 
 ## Project Status
 
-This project is early but usable locally. The next high-impact milestones are:
+This project is early but usable locally. Implemented high-impact features include:
 
 - SQLite cache with FTS5 for fast local search;
-- maintainer-focused `telegram_needs_reply` and `telegram_maintainer_brief` tools;
-- sanitized demo fixtures and benchmark numbers;
+- topic digests with source suggestions and dedupe clusters;
+- maintainer-focused needs-reply, action extraction, follow-up tracking, and weekly reports;
+- watchlists, research mode, trend detection, scoped reply sessions, and contact memory;
+- sanitized demo fixtures;
+
+Next milestones:
+
+- benchmark numbers;
 - install examples for more MCP clients.
 
 See [ROADMAP.md](./ROADMAP.md) for the full plan.
