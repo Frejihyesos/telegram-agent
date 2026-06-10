@@ -104,6 +104,8 @@ npm run ci
 
 The test suite uses Node's built-in `node:test` runner and avoids live Telegram writes.
 
+The repository includes a pinned GitHub Actions template at [docs/ci-github-actions.yml](./docs/ci-github-actions.yml). Copy it to `.github/workflows/ci.yml` when publishing with a GitHub token that has the `workflow` scope.
+
 ## Project Status
 
 This project is early but usable locally. The next high-impact milestones are:
