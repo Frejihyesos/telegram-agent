@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "telegram-agent": {
+      "command": "node",
+      "args": [
+        "scripts/telegram-agent-server.js"
+      ],
+      "env": {
+        "TELEGRAM_AGENT_ALLOW_SEND": "1"
+      }
+    }
+  }
+}

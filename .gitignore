@@ -1,0 +1,25 @@
+node_modules/
+npm-debug.log*
+
+# Local Telegram Agent state and secrets.
+.env
+.env.*
+!.env.example
+config.json
+session.txt
+drafts/
+*.session
+*.sqlite
+*.sqlite3
+*.db
+
+# Codex/plugin caches and local app state.
+.codex/cache/
+.codex/state/
+
+# OS/editor files.
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+

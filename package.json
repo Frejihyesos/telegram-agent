@@ -1,0 +1,22 @@
+{
+  "name": "telegram-agent",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Local Codex MCP tools for Telegram through an explicit Telegram API session.",
+  "license": "MIT",
+  "type": "commonjs",
+  "scripts": {
+    "login": "node scripts/login.js",
+    "login:qr": "node scripts/login.js --qr",
+    "check": "node --check scripts/telegram-agent-server.js && node --check scripts/login.js",
+    "test": "node --test",
+    "ci": "npm run check && npm test && npm run self-test",
+    "self-test": "node scripts/telegram-agent-server.js --self-test",
+    "status": "node scripts/telegram-agent-server.js --call telegram_setup_status {}"
+  },
+  "dependencies": {
+    "input": "^1.0.1",
+    "qrcode-terminal": "^0.12.0",
+    "telegram": "^2.26.22"
+  }
+}

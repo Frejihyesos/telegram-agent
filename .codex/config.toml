@@ -1,0 +1,6 @@
+[mcp_servers.telegram-agent]
+command = "node"
+args = ['scripts/telegram-agent-server.js']
+
+[mcp_servers.telegram-agent.env]
+TELEGRAM_AGENT_ALLOW_SEND = "1"

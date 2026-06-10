@@ -1,0 +1,30 @@
+{
+  "name": "telegram-agent",
+  "version": "0.1.0+codex.20260610153616",
+  "description": "Local Telegram API inbox and reply assistant tools for Codex.",
+  "author": {
+    "name": "Local developer"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Telegram Agent",
+    "shortDescription": "Triage Telegram chats, draft replies, and send authorized messages.",
+    "longDescription": "Telegram Agent adds local Codex tools for inbox briefs, dialog search, selected chat context, message search, reply drafts, and direct sends to explicitly authorized chats through a Telegram API login session. It does not read Telegram Desktop tdata.",
+    "developerName": "Local developer",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Search",
+      "Draft",
+      "Write"
+    ],
+    "brandColor": "#229ED9",
+    "defaultPrompt": [
+      "Show my unread Telegram chats.",
+      "Find a chat and summarize what needs my reply.",
+      "Draft a reply, but do not send it.",
+      "I authorize you to keep messaging one selected chat during this task."
+    ]
+  },
+  "mcpServers": "./.mcp.json"
+}
