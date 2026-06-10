@@ -115,6 +115,10 @@ This project is early but usable locally. The next high-impact milestones are:
 
 See [ROADMAP.md](./ROADMAP.md) for the full plan.
 
+## OSS Support Pitch
+
+For grant or OSS-support submissions, see [docs/OPENAI_OSS_APPLICATION.md](./docs/OPENAI_OSS_APPLICATION.md).
+
 ## License
 
 MIT. See [LICENSE](./LICENSE).
