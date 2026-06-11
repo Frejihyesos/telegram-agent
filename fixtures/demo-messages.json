@@ -78,5 +78,37 @@
     "outgoing": false,
     "sender_id": "ivan",
     "text": "Can you send the command now? The plugin does not start for me."
+  },
+  {
+    "source_ref": "User:maria",
+    "message_id": 501,
+    "age_hours": 10,
+    "outgoing": false,
+    "sender_id": "maria",
+    "text": "Can you book the table for tomorrow at 19:00 and send me the address?"
+  },
+  {
+    "source_ref": "User:maria",
+    "message_id": 502,
+    "age_hours": 9,
+    "outgoing": true,
+    "sender_id": "me",
+    "text": "I will send the address later today."
+  },
+  {
+    "source_ref": "Chat:family",
+    "message_id": 601,
+    "age_hours": 2,
+    "outgoing": false,
+    "sender_id": "dad",
+    "text": "Home WiFi password: demo-wifi-only. Please do not post it in public."
+  },
+  {
+    "source_ref": "Chat:family",
+    "message_id": 602,
+    "age_hours": 1.8,
+    "outgoing": false,
+    "sender_id": "mom",
+    "text": "Reminder: pick up the package tomorrow morning."
   }
 ]

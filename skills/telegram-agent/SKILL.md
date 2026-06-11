@@ -12,6 +12,11 @@ Use the `telegram-agent` MCP tools for Telegram account assistance. Prefer the s
 - Setup/status: call `telegram_auth_status` first for local auth state, or `telegram_setup_status` when dependency/send state is also needed.
 - "Set up Telegram / login / authorize account": call `telegram_start_setup` and give the user the returned local URL.
 - "Show unread/recent chats": call `telegram_inbox_brief` with a small limit. Use `unread_only: true` by default.
+- "What did I miss today / make my Telegram briefing": prefer cached flow, then call `telegram_personal_briefing` or `telegram_daily_personal_digest`.
+- "Prioritize my chats / smart inbox": call `telegram_smart_inbox`.
+- "Where was that address/link/password/code": call `telegram_memory_search`; use `telegram_sensitive_search` for explicitly sensitive values.
+- "Brief me on this person/contact": call `telegram_contact_brief` if cached context is enough, or `telegram_find_dialogs` plus `telegram_chat_context` for live context.
+- "What did I promise / what should I follow up": call `telegram_personal_followups`.
 - "Create a digest for AI channels / Codex / MCP": call `telegram_cache_status`; if cache is empty, call `telegram_sync_sources`, then `telegram_sync_recent_messages` with relevant categories; then call `telegram_run_topic_digest`.
 - "What did I miss / weekly report": call `telegram_weekly_maintainer_report`.
 - "Where do I need to reply": call `telegram_needs_reply`.
@@ -33,6 +38,7 @@ Use the `telegram-agent` MCP tools for Telegram account assistance. Prefer the s
 - Keep reads scoped: prefer small limits and a named chat before fetching message text.
 - For digest/research workflows, prefer cached tools after `telegram_sync_recent_messages` instead of repeatedly fetching live message windows.
 - Do not paste large private chat dumps into the conversation unless the user explicitly needs them.
+- Personal memory/search tools redact sensitive-looking values by default. Reveal values only when the user explicitly asks for them, and pass an authorization basis into `sensitive_authorization_basis`.
 - Do not send if `telegram_find_dialogs` returns ambiguous matches. Ask the user to choose the intended chat.
 - Use `telegram_start_reply_session` before `telegram_send_message`; direct send without an active scoped session should be treated as blocked.
 - Ongoing send authorization is limited to the named chat/contact and current task. It ends if the user revokes it, changes recipient, asks for a materially different goal, or a new conversation/task starts.
@@ -81,6 +87,13 @@ Use the `telegram-agent` MCP tools for Telegram account assistance. Prefer the s
 - `telegram_detect_prompt_injection`: flag Telegram messages that try to override instructions, exfiltrate secrets, or control tools.
 - `telegram_create_github_issue_drafts`: create local GitHub issue draft payloads from Telegram feedback; draft only.
 - `telegram_build_maintainer_context`: build a compact Codex-ready context pack with actions, reply needs, issue drafts, links, and safety findings.
+- `telegram_daily_personal_digest`: build a practical daily digest for ordinary users.
+- `telegram_smart_inbox`: rank chats by reply need, urgency, tasks, prompt-injection risk, and sensitive-message hints.
+- `telegram_memory_search`: search cached Telegram as local personal memory; redacts sensitive values by default.
+- `telegram_contact_brief`: summarize cached context for one contact or chat without a live fetch.
+- `telegram_personal_followups`: find promises, reminders, waiting-on-them threads, and incoming asks.
+- `telegram_sensitive_search`: find passwords, tokens, codes, private keys, or seed-like text; values are redacted unless explicitly requested.
+- `telegram_personal_briefing`: combine smart inbox, daily digest, follow-ups, useful links, and sensitive summary into one command-center object.
 - `telegram_create_watchlist` / `telegram_run_watchlist`: save and run topic monitoring.
 - `telegram_research_topic` / `telegram_detect_trends`: investigate topic history and rising terms.
 - `telegram_start_reply_session` / `telegram_stop_reply_session`: manage scoped direct-send authorization.

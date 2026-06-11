@@ -20,6 +20,13 @@
     "demo:issue-drafts": "node scripts/demo.js issue-drafts",
     "demo:context": "node scripts/demo.js context",
     "demo:oss-report": "node scripts/demo.js oss-report",
+    "demo:personal-digest": "node scripts/demo.js personal-digest",
+    "demo:smart-inbox": "node scripts/demo.js smart-inbox",
+    "demo:memory-search": "node scripts/demo.js memory-search",
+    "demo:contact-brief": "node scripts/demo.js contact-brief",
+    "demo:personal-followups": "node scripts/demo.js personal-followups",
+    "demo:sensitive-search": "node scripts/demo.js sensitive-search",
+    "demo:personal-briefing": "node scripts/demo.js personal-briefing",
     "self-test": "node scripts/telegram-agent-server.js --self-test",
     "status": "node scripts/telegram-agent-server.js --call telegram_setup_status {}"
   },

@@ -2,7 +2,7 @@
 
 ## Project Identity
 
-Telegram Agent is a local Codex plugin and MCP server for Telegram setup, inbox triage, dialog lookup, selected-chat context, message search, SQLite-backed digests/search/watchlists, maintainer intelligence, prompt-injection detection, GitHub issue drafts, Codex context packs, local reply drafts, scoped reply sessions, and explicitly authorized sends. It is a CommonJS Node.js project.
+Telegram Agent is a local Codex plugin and MCP server for Telegram setup, inbox triage, dialog lookup, selected-chat context, message search, SQLite-backed digests/search/watchlists, maintainer intelligence, ordinary-user personal briefings, smart inbox ranking, local memory search, secret-safe sensitive search, contact briefs, follow-up tracking, prompt-injection detection, GitHub issue drafts, Codex context packs, local reply drafts, scoped reply sessions, and explicitly authorized sends. It is a CommonJS Node.js project.
 
 ## Runtime Map
 
@@ -50,6 +50,7 @@ The MCP server runs over stdio, implements `initialize`, `tools/list`, and `tool
 - needs-reply/action/follow-up/weekly-report analysis;
 - prompt-injection scanning over untrusted Telegram text;
 - GitHub issue draft payloads and compact maintainer context packs;
+- ordinary-user smart inbox, personal digest, memory search, contact brief, follow-up, sensitive search, and personal briefing tools;
 - reply sessions and contact memory.
 
 `scripts/login.js` owns QR and phone-code login and writes the local GramJS session.

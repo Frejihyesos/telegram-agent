@@ -1,6 +1,6 @@
 {
   "name": "telegram-agent",
-  "version": "0.1.0+codex.20260610202401",
+  "version": "0.1.0+codex.20260611094747",
   "description": "Local Telegram API inbox and reply assistant tools for Codex.",
   "author": {
     "name": "Local developer"
@@ -8,8 +8,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Telegram Agent",
-    "shortDescription": "Triage Telegram chats, draft issues/replies, and send authorized messages.",
-    "longDescription": "Telegram Agent adds a local browser setup wizard and Codex tools for inbox briefs, dialog search, selected chat context, message search, maintainer context packs, prompt-injection detection, GitHub issue drafts, reply drafts, and direct sends to explicitly authorized chats through a Telegram API login session. It does not read Telegram Desktop tdata.",
+    "shortDescription": "Triage Telegram, build personal briefings, draft issues/replies, and send authorized messages.",
+    "longDescription": "Telegram Agent adds a local browser setup wizard and Codex tools for inbox briefs, dialog search, selected chat context, SQLite cache search, personal briefings, smart inbox ranking, local memory search, secret-safe sensitive search, contact briefs, maintainer context packs, prompt-injection detection, GitHub issue drafts, reply drafts, and direct sends to explicitly authorized chats through a Telegram API login session. It does not read Telegram Desktop tdata.",
     "developerName": "Local developer",
     "category": "Productivity",
     "capabilities": [
@@ -22,6 +22,8 @@
     "defaultPrompt": [
       "Set up Telegram Agent in the local browser wizard.",
       "Show my unread Telegram chats.",
+      "Build my personal Telegram briefing for today.",
+      "Search my Telegram memory for a link, address, or code.",
       "Find a chat and summarize what needs my reply.",
       "Draft a reply, but do not send it.",
       "I authorize you to keep messaging one selected chat during this task."

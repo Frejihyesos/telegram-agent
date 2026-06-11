@@ -129,6 +129,55 @@ function main() {
     printOssReport(loaded);
     return;
   }
+  if (command === "personal-digest") {
+    print({
+      loaded,
+      result: intelligence.telegramDailyPersonalDigest({ period: "last_24h", include_channels: false, limit: 100 })
+    });
+    return;
+  }
+  if (command === "smart-inbox") {
+    print({
+      loaded,
+      result: intelligence.telegramSmartInbox({ period: "last_24h", include_channels: false, limit: 20 })
+    });
+    return;
+  }
+  if (command === "memory-search") {
+    print({
+      loaded,
+      result: intelligence.telegramMemorySearch({ query: "address", period: "last_24h", limit: 20 })
+    });
+    return;
+  }
+  if (command === "contact-brief") {
+    print({
+      loaded,
+      result: intelligence.telegramContactBrief({ chat: "Maria", period: "last_24h", limit: 50 })
+    });
+    return;
+  }
+  if (command === "personal-followups") {
+    print({
+      loaded,
+      result: intelligence.telegramPersonalFollowups({ period: "last_24h", include_channels: false, limit: 20 })
+    });
+    return;
+  }
+  if (command === "sensitive-search") {
+    print({
+      loaded,
+      result: intelligence.telegramSensitiveSearch({ period: "last_24h", query: "password", limit: 20 })
+    });
+    return;
+  }
+  if (command === "personal-briefing") {
+    print({
+      loaded,
+      result: intelligence.telegramPersonalBriefing({ period: "last_24h", include_channels: false, limit: 100 })
+    });
+    return;
+  }
   throw new Error(`Unknown demo command: ${command}`);
 }
 

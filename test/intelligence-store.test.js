@@ -126,6 +126,72 @@ function loadMaintainerSafetyData() {
   });
 }
 
+function loadPersonalData() {
+  cleanupDb();
+  const now = Date.now();
+  return intelligence.loadFixtureData({
+    sources: [
+      {
+        ref: "User:maria",
+        id: "30",
+        title: "Maria",
+        username: "maria",
+        type: "User",
+        categories: ["personal"]
+      },
+      {
+        ref: "Chat:family",
+        id: "31",
+        title: "Family",
+        type: "Chat",
+        categories: ["personal"]
+      }
+    ],
+    messages: [
+      {
+        source_ref: "User:maria",
+        message_id: 20,
+        date: new Date(now - 6 * 60 * 60 * 1000).toISOString(),
+        outgoing: false,
+        sender_id: "maria",
+        text: "Can you book the table for tomorrow at 19:00?"
+      },
+      {
+        source_ref: "User:maria",
+        message_id: 21,
+        date: new Date(now - 5 * 60 * 60 * 1000).toISOString(),
+        outgoing: true,
+        sender_id: "me",
+        text: "I will send the address later today."
+      },
+      {
+        source_ref: "User:maria",
+        message_id: 22,
+        date: new Date(now - 1 * 60 * 60 * 1000).toISOString(),
+        outgoing: false,
+        sender_id: "maria",
+        text: "Can you send the address now?"
+      },
+      {
+        source_ref: "Chat:family",
+        message_id: 30,
+        date: new Date(now - 2 * 60 * 60 * 1000).toISOString(),
+        outgoing: false,
+        sender_id: "dad",
+        text: "Home WiFi password: demo-wifi-only. Please do not post it in public."
+      },
+      {
+        source_ref: "Chat:family",
+        message_id: 31,
+        date: new Date(now - 90 * 60 * 1000).toISOString(),
+        outgoing: false,
+        sender_id: "mom",
+        text: "Reminder: pick up the package tomorrow morning."
+      }
+    ]
+  });
+}
+
 test("cache status and source suggestions work on synthetic data", () => {
   loadSyntheticData();
   const status = intelligence.telegramCacheStatus();
@@ -227,4 +293,65 @@ test("maintainer context pack combines actions, drafts, and safety findings", ()
   assert.equal(context.safety_findings.length, 1);
   assert.equal(context.top_actions.some((item) => item.message_ref === "Chat:maintainers:10"), true);
   assert.equal(context.agent_hints.some((hint) => hint.includes("compact context")), true);
+});
+
+test("personal digest, smart inbox, and followups prioritize ordinary-user chats", () => {
+  loadPersonalData();
+
+  const inbox = intelligence.telegramSmartInbox({ period: "last_24h", source_refs: ["User:maria", "Chat:family"], include_channels: false, limit: 10 });
+  assert.equal(inbox.items[0].source_ref, "User:maria");
+  assert.equal(inbox.items[0].recommended_action, "draft_reply");
+  assert.equal(inbox.items[0].pending_count, 1);
+
+  const followups = intelligence.telegramPersonalFollowups({ period: "last_24h", source_refs: ["User:maria", "Chat:family"], include_channels: false });
+  assert.equal(followups.followups.some((item) => item.message_ref === "User:maria:21" && item.type === "i_promised"), true);
+
+  const digest = intelligence.telegramDailyPersonalDigest({ period: "last_24h", source_refs: ["User:maria", "Chat:family"], include_channels: false });
+  assert.equal(digest.priority_inbox.some((item) => item.source_ref === "User:maria"), true);
+  assert.equal(digest.recent_highlights.some((message) => message.text.includes("[redacted]")), true);
+  assert.equal(digest.recent_highlights.some((message) => message.text.includes("demo-wifi-only")), false);
+});
+
+test("memory and sensitive search redact secrets unless explicitly authorized", () => {
+  loadPersonalData();
+
+  const memory = intelligence.telegramMemorySearch({ query: "WiFi", period: "last_24h", source_refs: ["Chat:family"], limit: 10 });
+  assert.equal(memory.count, 1);
+  assert.equal(memory.groups[0].messages[0].text.includes("[redacted]"), true);
+  assert.equal(memory.groups[0].messages[0].text.includes("demo-wifi-only"), false);
+
+  const sensitive = intelligence.telegramSensitiveSearch({ query: "password", period: "last_24h", source_refs: ["Chat:family"], limit: 10 });
+  assert.equal(sensitive.count, 1);
+  assert.equal(sensitive.values_included, false);
+  assert.equal(sensitive.matches[0].text.includes("[redacted]"), true);
+
+  assert.throws(
+    () => intelligence.telegramSensitiveSearch({ query: "password", period: "last_24h", source_refs: ["Chat:family"], include_sensitive_values: true }),
+    /sensitive_authorization_basis/
+  );
+
+  const revealed = intelligence.telegramSensitiveSearch({
+    query: "password",
+    period: "last_24h",
+    source_refs: ["Chat:family"],
+    include_sensitive_values: true,
+    sensitive_authorization_basis: "User explicitly asked to reveal this cached password."
+  });
+  assert.equal(revealed.values_included, true);
+  assert.equal(revealed.matches[0].text.includes("demo-wifi-only"), true);
+});
+
+test("contact brief and personal briefing combine cached memory context", () => {
+  loadPersonalData();
+
+  const brief = intelligence.telegramContactBrief({ chat: "Maria", period: "last_24h", limit: 50 });
+  assert.equal(brief.contact.ref, "User:maria");
+  assert.equal(brief.needs_reply[0].latest_message_ref, "User:maria:22");
+  assert.equal(brief.followups.some((item) => item.message_ref === "User:maria:21"), true);
+
+  const briefing = intelligence.telegramPersonalBriefing({ period: "last_24h", source_refs: ["User:maria", "Chat:family"], include_channels: false, limit: 100 });
+  assert.match(briefing.briefing_id, /^[a-f0-9]{16}$/);
+  assert.equal(briefing.priority_inbox.some((item) => item.source_ref === "User:maria"), true);
+  assert.equal(briefing.sensitive_summary.count, 1);
+  assert.equal(briefing.sensitive_summary.values_included, false);
 });

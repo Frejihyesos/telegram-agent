@@ -10,7 +10,7 @@ https://github.com/Frejihyesos/telegram-agent
 
 ## Short Description
 
-Telegram Agent is a local, privacy-first MCP server and Codex plugin that helps open-source maintainers triage Telegram chats, inspect context, search messages, draft replies, and send explicitly authorized responses without running a hosted relay.
+Telegram Agent is a local, privacy-first MCP server and Codex plugin that helps open-source maintainers and ordinary users triage Telegram chats, inspect context, search messages as local memory, build personal briefings, draft replies, and send explicitly authorized responses without running a hosted relay.
 
 ## Problem Solved
 
@@ -20,8 +20,8 @@ Telegram Agent gives AI coding assistants a narrow, auditable, local interface t
 
 ## Current Metrics
 
-- MCP tools: 43.
-- Unit tests: 20 passing with Node's built-in test runner.
+- MCP tools: 50.
+- Unit tests: 23 passing with Node's built-in test runner.
 - CI matrix: Windows and Ubuntu across Node 20, 22, and 24.
 - Dependency audit: 0 known production vulnerabilities from `npm audit --omit=dev`.
 - Runtime dependencies: 5 direct packages after adding SQLite cache support and local QR SVG generation.
@@ -53,7 +53,7 @@ The project is useful for maintainers who coordinate:
 
 ChatGPT Pro, Codex, Codex Security, and API credits would help develop the project in several concrete ways:
 
-- improve smarter maintainer triage tools such as `telegram_needs_reply`, topic digests, watchlists, GitHub issue drafts, prompt-injection detection, and weekly maintainer reports;
+- improve smarter maintainer and ordinary-user triage tools such as `telegram_needs_reply`, `telegram_smart_inbox`, `telegram_personal_briefing`, topic digests, watchlists, GitHub issue drafts, prompt-injection detection, secret-safe memory search, and weekly maintainer reports;
 - generate safer reply drafts that account for chat history and project context;
 - review send-policy changes with security tooling before release;
 - create regression tests and synthetic fixtures for private-message workflows;
@@ -72,7 +72,7 @@ ChatGPT Pro, Codex, Codex Security, and API credits would help develop the proje
 
 ## Suggested Form Answer
 
-Telegram Agent is a local MCP server and Codex plugin for privacy-first Telegram workflow assistance. It helps open-source maintainers triage Telegram-based contributor and community communication: browser-based local setup, unread briefs, dialog search, selected-chat context, SQLite cache search, topic digests, watchlists, action extraction, prompt-injection detection, GitHub issue draft generation, Codex-ready maintainer context packs, weekly maintainer reports, local drafts, scoped direct sends, and local audit logs.
+Telegram Agent is a local MCP server and Codex plugin for privacy-first Telegram workflow assistance. It helps open-source maintainers and ordinary users triage Telegram-based communication: browser-based local setup, unread briefs, dialog search, selected-chat context, SQLite cache search, personal briefings, smart inbox ranking, local memory search, secret-safe sensitive search, contact briefs, follow-up tracking, topic digests, watchlists, action extraction, prompt-injection detection, GitHub issue draft generation, Codex-ready maintainer context packs, weekly maintainer reports, local drafts, scoped direct sends, and local audit logs.
 
 The project solves a real maintainer problem: OSS work often happens across GitHub and Telegram, but assistants need a narrow and safe interface before they can help. Telegram Agent keeps Telegram credentials and messages local, disables sending by default, and only allows direct sends for explicitly authorized resolved chats.
 

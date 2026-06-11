@@ -34,5 +34,23 @@
     "type": "User",
     "categories": ["work", "personal"],
     "sample_text": "plugin install support follow up"
+  },
+  {
+    "ref": "User:maria",
+    "id": "3002",
+    "title": "Maria",
+    "username": "maria",
+    "type": "User",
+    "categories": ["personal"],
+    "sample_text": "dinner reminder address calendar"
+  },
+  {
+    "ref": "Chat:family",
+    "id": "4001",
+    "title": "Family",
+    "username": null,
+    "type": "Chat",
+    "categories": ["personal"],
+    "sample_text": "home family reminders wifi"
   }
 ]
