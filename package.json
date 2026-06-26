@@ -3,8 +3,45 @@
   "version": "0.1.0",
   "private": false,
   "description": "Local Codex MCP tools for Telegram through an explicit Telegram API session.",
+  "author": "Frejihyesos",
   "license": "MIT",
+  "homepage": "https://github.com/Frejihyesos/telegram-agent#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Frejihyesos/telegram-agent.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Frejihyesos/telegram-agent/issues"
+  },
+  "keywords": [
+    "codex",
+    "mcp",
+    "telegram",
+    "productivity",
+    "local-first"
+  ],
   "type": "commonjs",
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    ".codex-plugin/",
+    ".codex/",
+    ".env.example",
+    ".mcp.json",
+    "AGENTS.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "LICENSE",
+    "README.md",
+    "ROADMAP.md",
+    "SECURITY.md",
+    "docs/",
+    "fixtures/",
+    "scripts/",
+    "skills/",
+    "test/"
+  ],
   "scripts": {
     "login": "node scripts/login.js",
     "login:qr": "node scripts/login.js --qr",
@@ -28,7 +65,8 @@
     "demo:sensitive-search": "node scripts/demo.js sensitive-search",
     "demo:personal-briefing": "node scripts/demo.js personal-briefing",
     "self-test": "node scripts/telegram-agent-server.js --self-test",
-    "status": "node scripts/telegram-agent-server.js --call telegram_setup_status {}"
+    "status": "node scripts/telegram-agent-server.js --call telegram_setup_status {}",
+    "release:check": "npm run ci && npm audit --omit=dev && npm pack --dry-run"
   },
   "dependencies": {
     "better-sqlite3": "^12.10.0",

@@ -1,16 +1,26 @@
 {
   "name": "telegram-agent",
-  "version": "0.1.0+codex.20260611094747",
+  "version": "0.1.0",
   "description": "Local Telegram API inbox and reply assistant tools for Codex.",
   "author": {
-    "name": "Local developer"
+    "name": "Frejihyesos",
+    "url": "https://github.com/Frejihyesos"
   },
+  "homepage": "https://github.com/Frejihyesos/telegram-agent#readme",
+  "repository": "https://github.com/Frejihyesos/telegram-agent",
+  "license": "MIT",
+  "keywords": [
+    "telegram",
+    "codex",
+    "mcp",
+    "local-first"
+  ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Telegram Agent",
     "shortDescription": "Triage Telegram, build personal briefings, draft issues/replies, and send authorized messages.",
     "longDescription": "Telegram Agent adds a local browser setup wizard and Codex tools for inbox briefs, dialog search, selected chat context, SQLite cache search, personal briefings, smart inbox ranking, local memory search, secret-safe sensitive search, contact briefs, maintainer context packs, prompt-injection detection, GitHub issue drafts, reply drafts, and direct sends to explicitly authorized chats through a Telegram API login session. It does not read Telegram Desktop tdata.",
-    "developerName": "Local developer",
+    "developerName": "Frejihyesos",
     "category": "Productivity",
     "capabilities": [
       "Read",
@@ -22,11 +32,7 @@
     "defaultPrompt": [
       "Set up Telegram Agent in the local browser wizard.",
       "Show my unread Telegram chats.",
-      "Build my personal Telegram briefing for today.",
-      "Search my Telegram memory for a link, address, or code.",
-      "Find a chat and summarize what needs my reply.",
-      "Draft a reply, but do not send it.",
-      "I authorize you to keep messaging one selected chat during this task."
+      "Build my personal Telegram briefing for today."
     ]
   },
   "mcpServers": "./.mcp.json"

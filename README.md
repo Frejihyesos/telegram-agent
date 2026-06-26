@@ -125,6 +125,7 @@ npm run check
 npm test
 npm run self-test
 npm run ci
+npm run release:check
 npm run demo:digest
 npm run demo:needs-reply
 npm run demo:weekly-report
@@ -145,11 +146,21 @@ The test suite uses Node's built-in `node:test` runner and avoids live Telegram 
 
 The demo commands use synthetic fixtures only; they do not require Telegram credentials.
 
-The repository includes a pinned GitHub Actions template at [docs/ci-github-actions.yml](./docs/ci-github-actions.yml). Copy it to `.github/workflows/ci.yml` when publishing with a GitHub token that has the `workflow` scope.
+The repository includes an active pinned GitHub Actions workflow at `.github/workflows/ci.yml` and a copyable template at [docs/ci-github-actions.yml](./docs/ci-github-actions.yml).
+
+## Release
+
+The first release is `0.1.0`. Before tagging or publishing, run:
+
+```powershell
+npm run release:check
+```
+
+Also review [docs/dependency-license-notes.md](./docs/dependency-license-notes.md): the locked dependency tree currently includes `@cryptography/aes@0.1.1` with `GPL-3.0-or-later` via `telegram@2.26.22`.
 
 ## Project Status
 
-This project is early but usable locally. Implemented high-impact features include:
+This project is early but usable locally. The `0.1.0` release includes:
 
 - SQLite cache with FTS5 for fast local search;
 - local browser setup wizard with QR and phone-code login;
